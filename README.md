@@ -2,199 +2,138 @@
 
 ## 📌 Project Overview
 
-The **Bookstore Management System** is a full-stack application designed to automate and streamline the operations of a bookstore. The system replaces traditional manual processes with a **fully automated** digital solution that manages inventory, tracks sales, and facilitates seamless order processing.
+The **Bookstore Management System** is a **FastAPI-based backend** that allows users to:
+
+- 📚 **Manage books** (add, view inventory)
+- 🛒 **Purchase books** (process transactions)
+- 🔐 **User authentication** (register, login with JWT security)
+- 🛡 **Secure API endpoints** (role-based access control)
+
+This API is designed to integrate with a **React frontend** (to be developed) and can be deployed using **Docker, AWS, or Heroku**.
+
+---
 
 ## 🚀 Features
 
-- **User Authentication** (Customers, Employees, and Admins)
-- **Inventory Management** (Adding, Updating, and Removing Books)
-- **Sales Records Management**
-- **Customer Orders** (Online & In-Store)
-- **Supplier Orders**
-- **Real-time Inventory Updates**
-- **Integration with Payment Gateways**
-
-## 📂 Project Structure
-
-The project follows a **three-tier architecture**:
-1. **Frontend** - Built with React.js for a responsive and user-friendly interface.
-2. **Backend** - Developed using Node.js with Express.js.
-3. **Database** - PostgreSQL with Sequelize ORM for managing data.
+✅ **User Authentication** (Register/Login with JWT tokens)  
+✅ **Book Inventory Management** (CRUD operations)  
+✅ **Secure Transactions** (Purchase books, update stock)  
+✅ **Database Integration** (PostgreSQL/SQLite with SQLAlchemy)  
+✅ **FastAPI Docs** (Swagger UI at `/docs`)  
+✅ **Unit Testing Support** (pytest)  
 
 ---
 
-## 🛠️ Tech Stack
+## 📂 Folder Structure
 
-### **Frontend:**
+```plaintext
 
-- React.js
-- React Router
-- Axios
-- Bootstrap
-
-### **Backend:**
-
-- Node.js with Express.js
-- Sequelize ORM
-- JSON Web Tokens (JWT) for authentication
-
-### **Database:**
-
-- PostgreSQL
-
-### **Tools:**
-
-- GitHub for version control
-- WSL (if using Windows)
-- Postman for API testing
-- Docker (optional for containerization)
+bookstore-management/
+│── main.py                  # Root entry point for FastAPI app
+│── requirements.txt          # List of dependencies
+│── .env                      # Environment variables (database credentials, secret keys)
+│── README.md                 # Project documentation
+│
+├── app/                      # Main application folder
+│   ├── __init__.py
+│   ├── main.py               # FastAPI setup & routes inclusion
+│   ├── database.py           # Database connection (SQLAlchemy)
+│   ├── models.py             # Database models (User, Book, Transaction)
+│   ├── schemas.py            # Pydantic schemas for validation
+│   ├── security.py           # Authentication & JWT token functions
+│   ├── routes/               # API route handlers
+│   │   ├── users.py          # User authentication (register, login)
+│   │   ├── books.py          # Book inventory management
+│   │   ├── transactions.py   # Purchase processing
+│   ├── tests/                # Unit & integration tests
+│   │   ├── test_users.py     # Tests for user authentication
+│   │   ├── test_books.py     # Tests for book management
+│   │   ├── test_sales.py     # Tests for transactions
+│
+├── frontend/                 # (Optional) React frontend (to be developed)
+```
 
 ---
 
-## 📖 Setup & Installation
+## 🛠 Installation & Setup
 
-### **1️⃣ Check Your CLI Environment**
+### 1️⃣ **Clone the Repository**
 
-Before running any command, check your CLI type:
-```sh
-echo "CLI Type: $(uname -a)"
-```
-If using **WSL**, check the Windows version:
-```sh
-wsl --list --verbose
-```
-
-### **2️⃣ Clone the Repository**
-
-```sh
-git clone https://github.com/YOUR_USERNAME/bookstore-management.git
+```bash
+git clone https://github.com/yourusername/bookstore-management.git
 cd bookstore-management
 ```
 
-### **3️⃣ Backend Setup**
+### 2️⃣ **Create a Virtual Environment**
 
-```sh
-cd backend
-npm install
+```bash
+python -m venv venv
+source venv/bin/activate  # For Mac/Linux
+venv\Scripts\activate     # For Windows
 ```
 
-#### **Create `.env` File**
+### 3️⃣ **Install Dependencies**
 
-```sh
-touch .env
-```
-Add the following environment variables:
-```sh
-DATABASE_URL=postgres://USER:PASSWORD@localhost:5432/bookstore
-JWT_SECRET=your_secret_key
-PORT=5000
+```bash
+pip install -r requirements.txt
 ```
 
-#### **Initialize Sequelize Configuration**
+### 4️⃣ **Run the FastAPI Server**
 
-```sh
-npx sequelize-cli init
-```
-Manually edit `backend/config/config.json`:
-```json
-{
-  "development": {
-    "username": "your_db_username",
-    "password": "your_db_password",
-    "database": "bookstore",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
-  }
-}
+```bash
+python main.py
 ```
 
-#### **Run Migrations**
+OR
 
-```sh
-npx sequelize-cli db:migrate
+```bash
+uvicorn app.main:app --reload
 ```
 
-#### **Start the Backend Server**
+### 5️⃣ **Test API Endpoints in Swagger UI**
 
-```sh
-nodemon backend/server.js
-```
+Open in browser:  
+📌 **<http://127.0.0.1:8000/docs>**  *(Swagger UI)*  
+📌 **<http://127.0.0.1:8000/redoc>** *(Redoc UI)*
 
-### **4️⃣ Frontend Setup**
+---
 
-```sh
-cd ../frontend
-npx create-react-app frontend
-cd frontend
-npm install
-```
+## 🛠 Environment Variables (`.env` file)
 
-#### **Start React App**
+Create a `.env` file in the project root and configure:
 
-```sh
-npm start
+```env
+SECRET_KEY=your_secret_key_here
+DATABASE_URL=sqlite:///./bookstore.db  # Change to PostgreSQL if needed
 ```
 
 ---
 
-## 📝 API Endpoints
+## 🛠 Running Tests
 
-### **Authentication**
+Run **pytest** to execute unit tests:
 
-| Method | Endpoint         | Description             |
-|--------|-----------------|-------------------------|
-| POST   | `/signup`       | Register a new user    |
-| POST   | `/login`        | Authenticate user      |
-
-### **Books**
-
-| Method | Endpoint         | Description               |
-|--------|-----------------|---------------------------|
-| GET    | `/books`        | Get all books             |
-| POST   | `/books`        | Add a new book (Admin)    |
-
-### **Orders**
-
-| Method | Endpoint         | Description             |
-|--------|-----------------|-------------------------|
-| POST   | `/orders`       | Create a new order      |
-| GET    | `/orders`       | Get all orders          |
+```bash
+pytest
+```
 
 ---
 
-## 🎯 Contribution Guidelines
+## 📌 Future Improvements
 
-1. **Fork the repository**.
-2. Create a **feature branch**.
-3. Commit your changes.
-4. Open a **pull request**.
-
----
-
-## 🔥 Future Enhancements
-
-- Add **user roles and permissions**.
-- Implement **real-time notifications**.
-- Integrate **third-party payment gateways**.
-- Develop a **mobile-friendly UI**.
+✅ **React Frontend** (Bookstore UI for browsing and purchasing)  
+✅ **Admin Panel** (For book & order management)  
+✅ **Docker Support** (For easy deployment)  
+✅ **Cloud Deployment** (AWS, Render, or Heroku)
 
 ---
 
-## 🏆 Author & Acknowledgments
+## 🏆 Contributing
 
-Developed by **Latherio Kidd** as part of a project to enhance **bookstore automation**.
+Feel free to fork and contribute! Open an issue if you encounter any problems. 😊
 
 ---
 
 ## 📜 License
 
-This project is **open-source** and available under the MIT License.
-
----
-
-## ⭐ Support
-
-If you like this project, consider **starring** the repo!
-
-🚀 Happy Coding!
-
+This project is **MIT Licensed**. Feel free to modify and use it as needed!
